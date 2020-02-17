@@ -1,33 +1,40 @@
 import React, {Component} from 'react';
 import './Canvas.css';
 
+import {fillRectangle} from './canvasFunctions';
+
 import cheese from '../../assets/cheese.jpeg';
+import {Rectangle} from '../../classes/Rectangle';
 
-export default class Canvas extends Component {
+export default class Canvas extends Component {    
     componentDidMount() {
-        const canvas = this.refs.canvas;
-        const ctx = canvas.getContext("2d");
-        const img = this.refs.image;
+        this.canvas = this.refs.canvas;        
+        this.updateCanvasSize();
 
-        img.onload = () => {
-            canvas.width = img.width;
-            canvas.height = img.height;
+        this.context = this.canvas.getContext("2d");
+        this.draw();
+    }
+    
+    updateCanvasSize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    }
 
-            ctx.drawImage(img, 0, 0);
-            ctx.font = '40px Courier';
-            ctx.fillStyle = 'white';
-            ctx.textAlign = 'center';
-            ctx.fillText(this.props.text, canvas.width/2, canvas.height/2);
-        }
-      }
+    draw() {
+        this.drawBackground();
+    }
+
+    drawBackground(color) {
+        this.context.fillStyle = "#000000";
+        const background = new Rectangle(this.canvas.width, this.canvas.height, 0, 0)
+        fillRectangle(this.context, background);
+    }
 
     render() {
         return (
             <>
-                <div>
-                    <canvas ref='canvas' width={640} height={425}></canvas>
-                    <img ref='image' alt='' src={cheese} className='hidden'/>
-                </div>
+                <canvas ref='canvas' width={0} height={0}></canvas>
+                <img ref='image' alt='' src={cheese} className='hidden'/>
             </>
         )
     }
