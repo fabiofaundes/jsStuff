@@ -19,5 +19,5 @@ test('Coordinate to string', () => {
 })
 
 test('Coordinate can\'t be changed', () => {
-    
+    expect(() => {testCord1.x = 1}).toThrow();
 })

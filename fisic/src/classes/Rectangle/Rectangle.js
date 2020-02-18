@@ -27,13 +27,11 @@ export class Rectangle {
 
     toString() {
         const coordinateString = this.coordinate.toString();
-        return `{
-            width: ${this.width},
-            height: ${this.height},
-            coordinate: ${coordinateString}}`;
-    }
-
-    setCoordinate(coordinate){
-        this.coordinate = coordinate;
+        return(
+            `{`+
+            `width: ${this.width}, `+
+            `height: ${this.height}, `+
+            `coordinate: ${coordinateString}}`
+        )
     }
 }
