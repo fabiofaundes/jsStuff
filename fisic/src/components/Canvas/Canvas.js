@@ -4,7 +4,7 @@ import './Canvas.css';
 import {fillRectangle} from './canvasFunctions';
 
 import cheese from '../../assets/cheese.jpeg';
-import {Rectangle} from '../../classes/Rectangle';
+import {Rectangle} from '../../classes/Rectangle/Rectangle';
 
 export default class Canvas extends Component {    
     componentDidMount() {
