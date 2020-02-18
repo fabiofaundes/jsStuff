@@ -1,8 +1,3 @@
-
-export function drawLine (canvasContext, line) {
-    
-}
-
 export function fillRectangle (canvasContext, rectangle){
     console.log(canvasContext)
     debugger;
