@@ -5,7 +5,7 @@ export class Rectangle {
     // or
     // arguments: (width [float], height [float], x [float], y [float])
     constructor() {
-        if(arguments.length > 3){
+        if(arguments.length <= 3){
             this.coordinate = arguments[2];
         }else{
             this.coordinate = new Coordinate(arguments[2], arguments[3]);

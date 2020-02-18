@@ -12,7 +12,7 @@ export default class Canvas extends Component {
         this.updateCanvasSize();
 
         this.context = this.canvas.getContext("2d");
-        this.draw();
+        this.draw(this.context);
     }
     
     updateCanvasSize() {
@@ -20,14 +20,14 @@ export default class Canvas extends Component {
         this.canvas.height = window.innerHeight;
     }
 
-    draw() {
-        this.drawBackground();
+    draw(context) {
+        this.drawBackground(context);
     }
 
-    drawBackground(color) {
+    drawBackground(context) {
         this.context.fillStyle = "#000000";
         const background = new Rectangle(this.canvas.width, this.canvas.height, 0, 0)
-        fillRectangle(this.context, background);
+        fillRectangle(context, background);
     }
 
     render() {
