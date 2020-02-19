@@ -2,11 +2,27 @@ import { Coordinate } from "../Coordinate/Coordinate";
 
 export function CollisionDetector (){
     const rectangles = (rect1, rect2) => {
-        var collided = false;
+        if(rect1.equals(rect2)){
+            return true;
+        }
+        
+        if(rect1.coordinate.x > rect2.coordinate.x + rect2.width){
+            return false;
+        }            
 
-        if(rect1.coordinate.x >= rect2.coordinate.x)
+        if(rect2.coordinate.x > rect1.coordinate.x + rect1.width){
+            return false;
+        }            
+        
+        if(rect1.coordinate.y > rect2.coordinate.y + rect2.height){
+            return false;
+        }            
 
-        return collided;
+        if(rect2.coordinate.y > rect1.coordinate.y + rect1.height){
+            return false;
+        }
+
+        return true;
     }
     
     const lines = (line1, line2) => {
