@@ -11,10 +11,13 @@ const line6 = new Line(new Coordinate(-1,-1), new Coordinate(5,5), true);
 test("Line slope works", () => {
     expect(line1.slope()).toBe(1);
     expect(line6.slope()).toBe(1);
+    expect(line5.slope()).toBe(1)
 })
 
 test("Line getY works", () => {
     expect(line1.getY(0)).toBe(0);
+    expect(line5.getY(0)).toBe(0);
+    expect(line6.getY(0)).toBe(0);
 })
 
 test("Line equals working", () => {
@@ -29,4 +32,11 @@ test("Line equals working", () => {
 
     //Linhas infinitas
     expect(line5.equals(line6)).toBeTruthy();
+})
+
+test("Line biggest/lowest works", () => {
+    expect(line1.biggestX).toBe(1);
+    expect(line1.biggestY).toBe(1);
+    expect(line1.lowestX).toBe(0);
+    expect(line1.lowestY).toBe(0);
 })

@@ -13,7 +13,7 @@ export function Line(coord1, coord2, infinite) {
     //y-yo=m(x-xo)
     //y=m(x-xo)+yo
     const getY = (x) => {
-        return slope*(x-coord1.x) + coord1.y;
+        return slope()*(x-coord1.x) + coord1.y;
     }
 
     const equals = (object) => {
@@ -28,8 +28,8 @@ export function Line(coord1, coord2, infinite) {
 
         if(infinite)
             return(
-                object.slope === this.slope &&
-                object.getY(0) === this.getY(0)
+                object.slope() === slope() &&
+                object.getY(0) === getY(0)
             );
 
         return(
@@ -43,13 +43,49 @@ export function Line(coord1, coord2, infinite) {
         )
     }
 
-    return{
+    if(infinite)
+        return {
+            get p1 (){return coord1},
+            get p2 (){return coord2},
+            get endless (){return infinite},
+            slope,
+            getX,
+            getY,
+            equals,
+        }
+
+    var biggestX;
+    var biggestY;
+    var lowestX;
+    var lowestY;
+
+    if(coord1.x > coord2.x){
+        biggestX = coord1.x;
+        lowestX = coord2.x;
+    } else {
+        biggestX = coord2.x;
+        lowestX = coord1.x;
+    }
+
+    if(coord1.y > coord2.y){
+        biggestY = coord1.y;
+        lowestY = coord2.y;
+    } else {
+        biggestY = coord2.y;
+        lowestY = coord1.y;
+    }
+
+    return {
         get p1 (){return coord1},
         get p2 (){return coord2},
         get endless (){return infinite},
         slope,
         getX,
         getY,
-        equals,        
+        equals,
+        biggestX,
+        lowestX,
+        biggestY,
+        lowestY,
     }
 }

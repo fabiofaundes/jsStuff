@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import './Canvas.css';
 
-import {fillRectangle} from './canvasFunctions';
+import {fillRectangle, drawLine} from './canvasFunctions';
 
 import cheese from '../../assets/cheese.jpeg';
 import {Rectangle} from '../../classes/Rectangle/Rectangle';
+import { Coordinate } from '../../classes/Coordinate/Coordinate';
+import { Line } from '../../classes/Line/Line';
 
 export default class Canvas extends Component {    
     componentDidMount() {
@@ -22,6 +24,7 @@ export default class Canvas extends Component {
 
     draw(context) {
         this.drawBackground(context);
+        this.drawLine(context);
     }
 
     drawBackground(context) {
@@ -30,10 +33,16 @@ export default class Canvas extends Component {
         fillRectangle(context, background);
     }
 
+    drawLine(context){
+        this.context.strokeStyle='#FFFFFF';
+        const line = new Line(new Coordinate(40,40), new Coordinate(70,100), true);
+        drawLine(context, line);
+    }
+
     render() {
         return (
             <>
-                <canvas ref='canvas' width={0} height={0}></canvas>
+                <canvas ref='canvas' width={0} height={0} className='canvas'></canvas>
                 <img ref='image' alt='' src={cheese} className='hidden'/>
             </>
         )
