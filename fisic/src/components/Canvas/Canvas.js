@@ -41,7 +41,6 @@ export default class Canvas extends Component {
 
         drawLine(this.context, line1);
         drawLine(this.context, line2);
-        
     }
 
     handleResize(){
