@@ -1,7 +1,4 @@
-@font-face {
-  font-family: '8-bit';
-  src: url('./assets/fonts/upheaval/upheavtt.ttf');
-}
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap');
 
 body, html{
   width: 100%;

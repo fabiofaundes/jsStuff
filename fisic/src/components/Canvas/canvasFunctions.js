@@ -26,5 +26,14 @@ export function drawLine(canvasContext, line){
 }
 
 export function drawText(canvasContext, text){
-    
+    const font = `40px ${text.family}`;
+    canvasContext.font = font;
+    console.log(font);
+    console.log(canvasContext.font);
+    canvasContext.fillStyle = text.color;
+    canvasContext.textAlign = text.align;
+    canvasContext.fillText(
+        text.content,
+        text.coordinate.x,
+        text.coordinate.y);
 }

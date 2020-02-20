@@ -19,7 +19,6 @@ export class KeyboardController {
     }
 
     keyDownhandler (e){    
-        console.log(e.keyCode)
         switch(e.keyCode){
             case Keys.RIGHT:
                 this.rightPressed = true;
