@@ -3,7 +3,6 @@ import './Canvas.css';
 
 import {fillRectangle, drawLine} from './canvasFunctions';
 
-import cheese from '../../assets/cheese.jpeg';
 import {Rectangle} from '../../classes/Rectangle/Rectangle';
 import { Coordinate } from '../../classes/Coordinate/Coordinate';
 import { Line } from '../../classes/Line/Line';
@@ -60,8 +59,7 @@ export default class Canvas extends Component {
     render() {
         return (
             <>
-                <canvas ref='canvas' width={0} height={0} className='canvas'></canvas>
-                <img ref='image' alt='' src={cheese} className='hidden'/>
+                <canvas ref='canvas' width={0} height={0} className='canvas'></canvas>                
             </>
         )
     }

@@ -1,3 +1,8 @@
+@font-face {
+  font-family: '8-bit';
+  src: url('./assets/fonts/upheaval/upheavtt.ttf');
+}
+
 body, html{
   width: 100%;
   height: 100%;

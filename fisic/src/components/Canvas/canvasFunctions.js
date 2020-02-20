@@ -24,3 +24,7 @@ export function drawLine(canvasContext, line){
         canvasContext.stroke();
     }
 }
+
+export function drawText(canvasContext, text){
+    
+}

@@ -9,8 +9,8 @@ export class SnakeGame {
         
     }
 
-    startGame(){
-        this.gameState = States.PAUSED;
+    playGame(){
+        
     }
 }
 
@@ -18,4 +18,5 @@ const States = {
     RUNNING: 'running',
     PAUSED: 'paused',
     GAME_OVER: 'gameover',
+    MENU: 'menu',
 }
