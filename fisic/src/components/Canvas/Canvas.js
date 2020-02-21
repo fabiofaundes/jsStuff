@@ -7,6 +7,7 @@ export default class Canvas extends Component {
     componentDidMount (){
         this.canvas = this.refs.canvas;                
         this.snakeGame = new SnakeGame(this.canvas);
+        this.snakeGame.start();
     }
 
     render() {

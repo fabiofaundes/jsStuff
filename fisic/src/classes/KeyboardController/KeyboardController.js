@@ -6,19 +6,28 @@ export class KeyboardController {
         document.addEventListener(
             'keydown',
             this.keyDownhandler,
-            false);
+            false,
+        );
         document.addEventListener(
             'keyup',
             this.keyUpHandler,
-            false);
+            false,
+        );
+        document.addEventListener(
+            'keypress',
+            this.keyPressedHandler,
+            false,
+        );
 
         this.rightPressed = false;
         this.leftPressed = false;
         this.upPressed = false;
         this.downPressed = false;
+        this.keyPressed = -1;
     }
 
     keyDownhandler (e){    
+        this.keyPressed = e.keyCode;
         switch(e.keyCode){
             case Keys.RIGHT:
                 this.rightPressed = true;
@@ -32,12 +41,16 @@ export class KeyboardController {
             case Keys.UP:
                 this.upPressed = true;
                 break;
+            case Keys.ENTER:
+                this.enterPressed = true;
+                break;
             default:
                 break;
         }
+        document.dispatchEvent(new CustomEvent('keyChanged'));
     }
 
-    keyUpHandler (e){
+    keyUpHandler (e){        
         switch(e.keyCode){
             case Keys.RIGHT:
                 this.rightPressed = false;
@@ -51,10 +64,19 @@ export class KeyboardController {
             case Keys.UP:
                 this.upPressed = false;
                 break;
+            case Keys.ENTER:
+                this.enterPressed = false;
+                break;
             default:
                 break;
         }
-    }    
+    }
+
+    getKeyPressed() {
+        const aux = this.keyPressed;
+        this.keyPressed = -1;
+        return aux;
+    }
 }
 
 export const Keys = {
@@ -62,4 +84,5 @@ export const Keys = {
     RIGHT: 39,
     DOWN: 40,
     LEFT: 37,
+    ENTER: 13,
 }

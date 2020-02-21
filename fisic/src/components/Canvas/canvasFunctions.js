@@ -7,6 +7,14 @@ export function fillRectangle (canvasContext, rectangle){
     );
 }
 
+export function strokeRectangle (canvasContext, rectangle){
+    canvasContext.rect(rectangle.coordinate.x,
+        rectangle.coordinate.y,
+        rectangle.width,
+        rectangle.height);
+    canvasContext.stroke();
+}
+
 export function drawLine(canvasContext, line){
     if(line.endless){
         const height = canvasContext.canvas.clientHeight;
@@ -26,12 +34,11 @@ export function drawLine(canvasContext, line){
 }
 
 export function drawText(canvasContext, text){
-    const font = `40px ${text.family}`;
-    canvasContext.font = font;
-    console.log(font);
-    console.log(canvasContext.font);
+    const font = `${text.size}px ${text.family}`;
+    canvasContext.font = font;    
     canvasContext.fillStyle = text.color;
     canvasContext.textAlign = text.align;
+    canvasContext.textBaseline = text.baseLine;
     canvasContext.fillText(
         text.content,
         text.coordinate.x,

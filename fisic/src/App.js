@@ -6,6 +6,7 @@ import Canvas from './components/Canvas/Canvas';
 function App() {
   return (
     <>
+      <div style={{fontFamily: 'Press Start 2P'}}></div>
       <Canvas text='cheese'/>
     </>
   );
