@@ -27,7 +27,7 @@ export class KeyboardController {
     }
 
     keyDownhandler (e){    
-        this.keyPressed = e.keyCode;
+        this.keyPressed = e.keyCode;        
         switch(e.keyCode){
             case Keys.RIGHT:
                 this.rightPressed = true;

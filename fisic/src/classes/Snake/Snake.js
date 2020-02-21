@@ -5,7 +5,7 @@ export class Snake {
     constructor(headCoordinate, length, width){
         var body = [];
         for(var i = 0; i < length; i++){
-            var coordinate = new Coordinate(headCoordinate.x - width*i, headCoordinate.y)
+            var coordinate = new Coordinate(headCoordinate.x - (width*i+i+1), headCoordinate.y)
             body[i] = new Rectangle(width, width, coordinate);
         }
 
@@ -13,6 +13,8 @@ export class Snake {
         this.length = length;
         this.width = width;
         this.direction = Directions.RIGHT;
+
+        alert(this.body);
     }
 
     incPos(){
@@ -23,6 +25,7 @@ export class Snake {
 
         var newX;
         var newY;
+        console.log(this.direction)
         switch(this.direction){                    
             case Directions.UP:
                 newX = this.body[0].coordinate.x;

@@ -1,10 +1,11 @@
 import {fillRectangle, drawText, strokeRectangle} from '../../components/Canvas/canvasFunctions';
 
 import {Rectangle} from '../Rectangle/Rectangle';
-import {Snake} from '../Snake/Snake';
+import {Snake, Directions} from '../Snake/Snake';
 import {KeyboardController, Keys} from '../KeyboardController/KeyboardController';
 import { CanvasText } from '../CanvasText/CanvasText';
 import { Coordinate } from '../Coordinate/Coordinate';
+import {CollisionDetector} from '../CollisionDetector/CollisionDetector';
 
 
 export class SnakeGame {
@@ -12,13 +13,15 @@ export class SnakeGame {
         this.canvas = canvas;
         this.context = this.canvas.getContext("2d");
         this.keyboardController = new KeyboardController();
-        this.blockWidth = 10;
+        this.blockWidth = 15;
 
         this.handleResize = this.handleResize.bind(this);
         this.draw = this.draw.bind(this);
         this.drawBackground = this.drawBackground.bind(this);
         this.menu = this.menu.bind(this);
         this.drawMenu = this.drawMenu.bind(this);
+        this.menuKeys = this.menuKeys.bind(this);
+        this.gameKeys = this.gameKeys.bind(this);
     }
     
     start(){
@@ -32,22 +35,25 @@ export class SnakeGame {
         this.menuLength = 1;
         this.menuOpt = 1;        
         this.draw();
-        document.addEventListener('keyChanged', () => {
-            var key = this.keyboardController.getKeyPressed();
-            switch(key){
-            case Keys.ENTER:                
-                this.chooseOption();
-                break;
-            case Keys.DOWN:
-                this.changeMenuOption(true);
-                break;
-            case Keys.UP:
-                this.changeMenuOption(false);
-                break; 
-            default:
-                break;
-            }  
-        })                                  
+        document.addEventListener('keyChanged', this.menuKeys);
+    }
+
+    menuKeys (){
+        var key = this.keyboardController.getKeyPressed();        
+        switch(key){
+        case Keys.ENTER:        
+            document.removeEventListener('keyChanged', this.menuKeys)
+            this.chooseOption();
+            break;
+        case Keys.DOWN:
+            this.changeMenuOption(true);
+            break;
+        case Keys.UP:
+            this.changeMenuOption(false);
+            break; 
+        default:
+            break;
+        }
     }
 
     changeMenuOption (shouldIncrease){
@@ -74,8 +80,8 @@ export class SnakeGame {
         const height = this.canvas.height - 40;
         const width = this.canvas.width;
         
-        const qntHBlocks = Math.floor(width/10);
-        const qntVBlocks = Math.floor(height/10);
+        const qntHBlocks = Math.floor(width/this.blockWidth);
+        const qntVBlocks = Math.floor(height/this.blockWidth);
         const midBlock = {
             horizontal: Math.floor(qntHBlocks/2),
             vertical: Math.floor(qntVBlocks/2)
@@ -85,16 +91,68 @@ export class SnakeGame {
             this.border.height + this.blockWidth*midBlock.vertical
         )
 
-        const snake = new Snake(midCoord, 5, this.blockWidth);
+        this.snake = new Snake(midCoord, 5, this.blockWidth);
+        this.directionChanged = true;
+        document.addEventListener('keyChanged', this.gameKeys)
 
         const intervalID = setInterval(() => {
             if(this.gameState === States.RUNNING){
-
+                this.snake.incPos();
+                this.directionChanged = true;
+                this.draw();
+                this.checkCollisons();
             }
-        },200)
+            if(this.gameState === States.GAME_OVER)
+                clearInterval(intervalID);
+        },100)
     }
 
-    handleResize(){        
+    gameKeys (){
+        const key = this.keyboardController.getKeyPressed();        
+        if(this.directionChanged){
+            switch(key){
+                case Keys.RIGHT:
+                    if(this.snake.direction !== Directions.LEFT)
+                        this.snake.direction = Directions.RIGHT;
+                    break;
+                case Keys.DOWN:
+                    if(this.snake.direction !== Directions.UP)
+                        this.snake.direction = Directions.DOWN;
+                    break;
+                case Keys.LEFT:
+                    if(this.snake.direction !== Directions.RIGHT)
+                        this.snake.direction = Directions.LEFT;
+                    break;
+                case Keys.UP:
+                    if(this.snake.direction !== Directions.DOWN)
+                        this.snake.direction = Directions.UP;
+                    break;
+                default:
+                    break;
+            }
+            this.directionChanged = false;
+        }
+        if(key === Keys.ENTER)
+            this.gameState =
+            this.gameState === States.RUNNING ?
+            States.PAUSED :
+            States.RUNNING;
+    }
+
+    checkCollisons() {
+        for(var i = 1; i < this.snake.body.length; i++)
+            if(CollisionDetector().rectangles(this.snake.body[0],this.snake.body[i]))
+                this.gameOver();
+    }
+
+    gameOver (){
+        this.gameState = States.GAME_OVER;
+        alert('gameover');
+    }
+
+    handleResize(){ 
+        if(this.gameState === States.RUNNING)
+            this.gameState = States.PAUSED;          
         this.updateCanvasSize();
         this.draw();
     }
@@ -106,8 +164,8 @@ export class SnakeGame {
         const height = this.canvas.height - 40;
         const width = this.canvas.width;
         this.border = {
-            height: (height % 10)/2,
-            width: (width % 10)/2
+            height: (height % this.blockWidth)/2,
+            width: (width % this.blockWidth)/2
         };
     }
 
@@ -119,6 +177,7 @@ export class SnakeGame {
         else{
             this.drawScore();
             this.drawMap();
+            this.drawSnake();
         }
     }
 
@@ -178,6 +237,12 @@ export class SnakeGame {
             this.canvas.height - this.border.height*2 - 40 + 2,            
             coord
         ));
+    }
+
+    drawSnake (){
+        this.context.fillStyle = 'white';
+        for(var i=0; i < this.snake.body.length; i++)
+            fillRectangle(this.context, this.snake.body[i]);
     }
 }
 
