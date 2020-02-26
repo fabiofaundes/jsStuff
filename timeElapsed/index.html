@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<head>
+</head>
+<body>
+    <script>
+        var initTime = new Date();
+    </script>
+    <h1 id='timeLabel'>Time elapsed: 0ms</h1>
+    <script>
+        var label = document.getElementById('timeLabel');
+        updateTime = function () {
+            var currentTime = new Date();
+            var timeDiff = currentTime - initTime;
+            label.innerHTML = `Time elapsed: ${timeDiff}ms`;
+            requestAnimationFrame(updateTime);
+        }        
+        requestAnimationFrame(updateTime);
+    </script>
+</body>
