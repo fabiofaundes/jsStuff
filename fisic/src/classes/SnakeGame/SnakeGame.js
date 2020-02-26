@@ -80,58 +80,63 @@ export class SnakeGame {
         const height = this.canvas.height - 40;
         const width = this.canvas.width;
         
-        const qntHBlocks = Math.floor(width/this.blockWidth);
-        const qntVBlocks = Math.floor(height/this.blockWidth);
+        const qntHBlocks = Math.floor(width/(this.blockWidth+1));
+        const qntVBlocks = Math.floor(height/(this.blockWidth+1));
         const midBlock = {
             horizontal: Math.floor(qntHBlocks/2),
             vertical: Math.floor(qntVBlocks/2)
         }
         const midCoord = new Coordinate(
-            this.border.width + this.blockWidth*midBlock.horizontal,
-            this.border.height + this.blockWidth*midBlock.vertical
+            this.border.width + (this.blockWidth+1)*midBlock.horizontal,
+            this.border.height + (this.blockWidth+1)*midBlock.vertical
         )
+        console.log(midCoord);
 
         this.snake = new Snake(midCoord, 5, this.blockWidth);
         this.directionChanged = true;
-        document.addEventListener('keyChanged', this.gameKeys)
+        document.addEventListener('keyChanged', this.gameKeys);
 
         const intervalID = setInterval(() => {
-            if(this.gameState === States.RUNNING){
+            if(this.gameState === States.RUNNING){                
                 this.snake.incPos();
-                this.directionChanged = true;
-                this.draw();
+                this.directionChanged = true;                                
                 this.checkCollisons();
-            }
-            if(this.gameState === States.GAME_OVER)
+                this.shouldPaintPause = true;
+                this.draw();
+            }else if(this.gameState === States.PAUSED){
+                this.pause();
+            }else if(this.gameState === States.GAME_OVER)
                 clearInterval(intervalID);
         },100)
     }
 
     gameKeys (){
-        const key = this.keyboardController.getKeyPressed();        
-        if(this.directionChanged){
-            switch(key){
-                case Keys.RIGHT:
-                    if(this.snake.direction !== Directions.LEFT)
-                        this.snake.direction = Directions.RIGHT;
-                    break;
-                case Keys.DOWN:
-                    if(this.snake.direction !== Directions.UP)
-                        this.snake.direction = Directions.DOWN;
-                    break;
-                case Keys.LEFT:
-                    if(this.snake.direction !== Directions.RIGHT)
-                        this.snake.direction = Directions.LEFT;
-                    break;
-                case Keys.UP:
-                    if(this.snake.direction !== Directions.DOWN)
-                        this.snake.direction = Directions.UP;
-                    break;
-                default:
-                    break;
+        const key = this.keyboardController.getKeyPressed(); 
+        if(this.gameState === States.RUNNING)       
+            if(this.directionChanged){
+                switch(key){
+                    case Keys.RIGHT:
+                        if(this.snake.direction !== Directions.LEFT)
+                            this.snake.direction = Directions.RIGHT;
+                        break;
+                    case Keys.DOWN:
+                        if(this.snake.direction !== Directions.UP)
+                            this.snake.direction = Directions.DOWN;
+                        break;
+                    case Keys.LEFT:
+                        if(this.snake.direction !== Directions.RIGHT)
+                            this.snake.direction = Directions.LEFT;
+                        break;
+                    case Keys.UP:
+                        if(this.snake.direction !== Directions.DOWN)
+                            this.snake.direction = Directions.UP;
+                        break;
+                    default:
+                        break;
+                }
+                this.directionChanged = false;
             }
-            this.directionChanged = false;
-        }
+
         if(key === Keys.ENTER)
             this.gameState =
             this.gameState === States.RUNNING ?
@@ -142,12 +147,30 @@ export class SnakeGame {
     checkCollisons() {
         for(var i = 1; i < this.snake.body.length; i++)
             if(CollisionDetector().rectangles(this.snake.body[0],this.snake.body[i]))
-                this.gameOver();
+                this.gameOver();        
+        
+        if(this.snake.body[0].coordinate.y > this.canvas.height - this.border.height)
+            this.gameOver();
+
+        if(this.snake.body[0].coordinate.x > this.canvas.width - this.border.height)
+            this.gameOver();
+
+        if(this.snake.body[0].coordinate.y < 40 + this.border.height)
+            this.gameOver();
+        
+        if(this.snake.body[0].coordinate.x < this.border.height)
+            this.gameOver();
+    }
+
+    pause (){
+        if(this.shouldPaintPause){
+            this.draw();
+            this.shouldPaintPause = false;
+        }            
     }
 
     gameOver (){
-        this.gameState = States.GAME_OVER;
-        alert('gameover');
+        this.gameState = States.GAME_OVER;        
     }
 
     handleResize(){ 
@@ -164,21 +187,28 @@ export class SnakeGame {
         const height = this.canvas.height - 40;
         const width = this.canvas.width;
         this.border = {
-            height: (height % this.blockWidth)/2,
-            width: (width % this.blockWidth)/2
+            height: (height % (this.blockWidth+1))/2,
+            width: (width % (this.blockWidth+1))/2
         };
     }
 
-    draw() {
-        this.drawBackground();        
-
-        if(this.gameState === States.MENU)
+    draw() {             
+        if(this.gameState === States.MENU){
+            this.drawBackground();   
             this.drawMenu();
-        else{
-            this.drawScore();
+        }            
+        
+        if(this.gameState === States.RUNNING){
+            this.drawBackground()
             this.drawMap();
             this.drawSnake();
+            this.drawScore();
         }
+
+        if(this.gameState === States.PAUSED){
+            this.drawPaused();
+        }
+
     }
 
     drawBackground() {
@@ -243,6 +273,22 @@ export class SnakeGame {
         this.context.fillStyle = 'white';
         for(var i=0; i < this.snake.body.length; i++)
             fillRectangle(this.context, this.snake.body[i]);
+    }
+
+    drawPaused (){
+        const paused = new CanvasText(
+            'PAUSED',
+            40,
+            'Arial',
+            new Coordinate(
+                this.canvas.width/2,
+                this.canvas.height/2
+            ),
+            'white',
+            'center',
+            'middle',
+        )
+        drawText(this.context, paused);
     }
 }
 

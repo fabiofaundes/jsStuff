@@ -16,10 +16,9 @@ test('Line collision works', () => {
 
 const rect1 = new Rectangle(10, 10, 0, 0);
 const rect2 = new Rectangle(3, 3, 2, 2);
-const rect3 = new Rectangle(10, 10, 7, 7);
+const rect3 = new Rectangle(10, 10, 11, 0);
 
 test('Rectangle collision works', () => {
     expect(CollisionDetector().rectangles(rect1, rect2)).toBeTruthy();
-    expect(CollisionDetector().rectangles(rect1, rect3)).toBeTruthy();
-    expect(CollisionDetector().rectangles(rect2, rect3)).toBeFalsy();
+    expect(CollisionDetector().rectangles(rect1, rect3)).toBeFalsy();
 })
